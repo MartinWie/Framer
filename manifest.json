@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_manifest_name__",
+  "description": "__MSG_manifest_description__",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "__MSG_manifest_title__",
+    "default_icon":"icon.png",
+    "default_popup":"popup.html"
+  },
+  "background": {
+    "service_worker": "background-worker.js"
+  },
+  "icons": {
+    "16":"icon.png",
+    "48":"icon.png",
+    "128":"icon.png"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "default_locale": "en"
+}
