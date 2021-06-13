@@ -20,8 +20,19 @@
     "tabs",
     "storage",
     "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
   ],
-  "default_locale": "en"
+  "host_permissions": [
+    "<all_urls>",
+    "https://www.liveagent.de/"
+  ],
+  "default_locale": "en",
+  "declarative_net_request" : {
+    "rule_resources" : [{
+      "id": "removeHeader",
+      "enabled": false,
+      "path": "removeHeader.json"
+    }]
+  }
 }
