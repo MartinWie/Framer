@@ -5,4 +5,5 @@ A chrome extension that lets the user drop X-Frame-Options and Content-Security-
 - fix remove logic
 - clean up code and permissions
 - add preview images
+- Write documentation(static rules vs the dynamic)
 - publish initial version in chrome store
