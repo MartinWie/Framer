@@ -15,6 +15,14 @@ chrome.webRequest.onHeadersReceived.addListener(
   ['responseHeaders', 'extraHeaders']
 );
 
+chrome.runtime.onStartup.addListener(
+  chrome.storage.local.get(['framers'], (result) => {
+    let framersLoaded = result.framers
+    if(framersLoaded == undefined) framersLoaded = []
+    updateUnblockRules(framersLoaded)
+  })
+);
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.action == "getList"){
@@ -119,14 +127,6 @@ async function updateUnblockRules(keywords) {
       }
     }
   )
-}
-
-function getFramerKeywords() {
-  return ["www.liveagent.de"]
-}
-
-function getFramerKeywordIds() {
-  return getFramerKeywords().map( keyword => stringToId(keyword) )
 }
 
 function isFramerID(id) {
