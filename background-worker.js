@@ -121,10 +121,10 @@ function generateUnblockRule(keyword) {
   }
   
 }
+
 function updateUnblockRulesAdd(keywords) {
   keywords.forEach(it => addFramerRule(it))
 }
-
 
 async function updateUnblockRulesRemove(keywords) {
 
