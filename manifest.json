@@ -19,8 +19,7 @@
   "permissions": [
     "storage",
     "webRequest",
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "<all_urls>"
