@@ -23,8 +23,7 @@
     "declarativeNetRequestFeedback"
   ],
   "host_permissions": [
-    "<all_urls>",
-    "https://www.liveagent.de/"
+    "<all_urls>"
   ],
   "default_locale": "en",
   "declarative_net_request" : {
