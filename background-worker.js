@@ -19,9 +19,21 @@ chrome.runtime.onStartup.addListener(
   chrome.storage.local.get(['framers'], (result) => {
     let framersLoaded = result.framers
     if(framersLoaded == undefined) framersLoaded = []
-    updateUnblockRules(framersLoaded)
+    updateUnblockRulesAdd(framersLoaded)
   })
 );
+
+// normally updateDynamicRules would do the trick and persist the rules but there seems to be a bug that 
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1203517
+// workaround: just refresh the rules with every created tab
+
+chrome.tabs.onCreated.addListener((tab) => {
+  chrome.storage.local.get(['framers'], (result) => {
+    let framersLoaded = result.framers
+    if(framersLoaded == undefined) framersLoaded = []
+    updateUnblockRulesAdd(framersLoaded)
+  })
+});
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -60,7 +72,7 @@ function addToFramersList(entry) {
     let framersLoaded = result.framers
     if(framersLoaded == undefined) framersLoaded = []
     framersLoaded.push(entry)
-    updateUnblockRules(framersLoaded)
+    updateUnblockRulesAdd(framersLoaded)
     saveFramersLocal(framersLoaded)
   });
 }
@@ -71,7 +83,7 @@ function removeFromFramerList(entry) {
     framersLoaded = framersLoaded.filter((it) => {
       return it != entry
     })
-    updateUnblockRules(framersLoaded)
+    updateUnblockRulesRemove(framersLoaded)
     saveFramersLocal(framersLoaded)
   });
 }
@@ -109,19 +121,21 @@ function generateUnblockRule(keyword) {
   }
   
 }
-
-async function updateUnblockRules(keywords) {
-
+function updateUnblockRulesAdd(keywords) {
   keywords.forEach(it => addFramerRule(it))
+}
+
+
+async function updateUnblockRulesRemove(keywords) {
 
   let sessionRulesAll = await chrome.declarativeNetRequest.getSessionRules()
-  let sessionRulesFramer = sessionRulesAll.filter( rule => isFramerID(rule['id']) && keywords.indexOf(rule) == -1)
-  let sessionRulesOthers = sessionRulesAll.filter( rule => sessionRulesFramer.indexOf(rule) == -1)
-  let sessionRulesOthersIDs = sessionRulesOthers.map( rule => rule['id'] )
+  let sessionRulesFramer = sessionRulesAll.filter( rule => isFramerID(rule['id']))
+  let sessionRulesToRemove = sessionRulesFramer.filter( rule => keywords.indexOf(rule['condition']['urlFilter'].replaceAll("*", "")) == -1)
+ 
+  let sessionRulesToRemoveIDs = sessionRulesToRemove.map( rule => rule['id'] )
 
-  
   await chrome.declarativeNetRequest.updateSessionRules(
-    {removeRuleIds: sessionRulesOthersIDs},() => {
+    {removeRuleIds: sessionRulesToRemoveIDs},() => {
       if (chrome.runtime.lastError) {
         console.log(chrome.runtime.lastError.message);
       }
