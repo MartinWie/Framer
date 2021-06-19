@@ -122,8 +122,13 @@ function generateUnblockRule(keyword) {
   
 }
 
-function updateUnblockRulesAdd(keywords) {
-  keywords.forEach(it => addFramerRule(it))
+async function updateUnblockRulesAdd(keywords) {
+  let sessionRulesAll = await chrome.declarativeNetRequest.getSessionRules()
+  let sessionRulesFramer = sessionRulesAll.filter( rule => isFramerID(rule['id']))
+  let sessionKeywords = sessionRulesFramer.map( rule => rule['condition']['urlFilter'].replaceAll("*", ""))
+  let sessionKeywordsToAdd = keywords.filter( keyword => sessionKeywords.indexOf(keyword) == -1)
+
+  sessionKeywordsToAdd.forEach(it => addFramerRule(it))
 }
 
 async function updateUnblockRulesRemove(keywords) {
