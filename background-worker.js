@@ -1,20 +1,3 @@
-let headersToRemove = [
-    'content-security-policy',
-    'x-frame-options',
-];
-  
-chrome.webRequest.onHeadersReceived.addListener(
-  details => ({
-    responseHeaders: details.responseHeaders.filter(header =>
-      !headersToRemove.includes(header.name.toLowerCase())
-    )
-  }),
-  {
-    urls: ['<all_urls>']
-  },
-  ['responseHeaders', 'extraHeaders']
-);
-
 chrome.runtime.onStartup.addListener(
   chrome.storage.local.get(['framers'], (result) => {
     let framersLoaded = result.framers
